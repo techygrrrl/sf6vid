@@ -20,11 +20,11 @@ func TestCensorBox_CropFilterOutput_p1(t *testing.T) {
 		YPercentage:      0.007407407407407,
 	}
 
-	err, smallResult := titleCensorBox.CropFilterOutput(smallVideo, Player1)
+	smallResult, err := titleCensorBox.CropFilterOutput(smallVideo, Player1)
 	assert.Nil(t, err)
 	assert.Equal(t, "crop=125:25:150:4", smallResult)
 
-	err, bigResult := titleCensorBox.CropFilterOutput(bigVideo, Player1)
+	bigResult, err := titleCensorBox.CropFilterOutput(bigVideo, Player1)
 	assert.Nil(t, err)
 	assert.Equal(t, "crop=250:50:300:8", bigResult)
 }
@@ -39,11 +39,11 @@ func TestCensorBox_CropFilterOutput_p2(t *testing.T) {
 		YPercentage:      0.007407407407407,
 	}
 
-	err, smallResult := titleCensorBox.CropFilterOutput(smallVideo, Player2)
+	smallResult, err := titleCensorBox.CropFilterOutput(smallVideo, Player2)
 	assert.Nil(t, err)
 	assert.Equal(t, "crop=125:25:685:4", smallResult)
 
-	err, bigResult := titleCensorBox.CropFilterOutput(bigVideo, Player2)
+	bigResult, err := titleCensorBox.CropFilterOutput(bigVideo, Player2)
 	assert.Nil(t, err)
 	assert.Equal(t, "crop=250:50:1370:8", bigResult)
 }
@@ -68,7 +68,7 @@ func TestBlurSettings_FilterOutput(t *testing.T) {
 }
 
 func TestHardcodedCensorBox_ToCensorBox(t *testing.T) {
-	title := hardcodedCensorBox{
+	title := HardcodedCensorBox{
 		name:   "Title Box",
 		width:  250,
 		height: 50,
@@ -93,21 +93,21 @@ func TestHardcodedCensorBox_ToCensorBox(t *testing.T) {
 
 func TestHardcodedCensorBox_ToCensorBox_moreBoxes(t *testing.T) {
 	censorBoxes := []CensorBox{
-		hardcodedCensorBox{
+		HardcodedCensorBox{
 			name:   "Title",
 			width:  250,
 			height: 50,
 			x:      300,
 			y:      8,
 		}.ToCensorBox(bigVideo),
-		hardcodedCensorBox{
+		HardcodedCensorBox{
 			name:   "Rank and Club",
 			width:  190,
 			height: 115,
 			x:      16,
 			y:      105,
 		}.ToCensorBox(bigVideo),
-		hardcodedCensorBox{
+		HardcodedCensorBox{
 			name:   "Username",
 			width:  345,
 			height: 40,
