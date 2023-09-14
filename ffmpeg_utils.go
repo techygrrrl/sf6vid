@@ -23,20 +23,39 @@ const (
 )
 
 func (c censorBox) CropFilterOutput(v videoResolution, side PlayerSide) (error, string) {
-	if side == Player1 {
-		cropWidth := int(math.Ceil(float64(v.width) * c.widthPercentage))
-		cropHeight := int(math.Ceil(float64(v.height) * c.heightPercentage))
-		cropX := int(math.Ceil(float64(v.width) * c.xPercentage))
-		cropY := int(math.Ceil(float64(v.height) * c.yPercentage))
+	cropWidth := int(math.Ceil(float64(v.width) * c.widthPercentage))
+	cropHeight := int(math.Ceil(float64(v.height) * c.heightPercentage))
+	cropY := int(math.Ceil(float64(v.height) * c.yPercentage))
 
-		return nil, fmt.Sprintf("crop=%d:%d:%d:%d", cropWidth, cropHeight, cropX, cropY)
+	var cropX int = -1
+
+	player1cropX := int(
+		math.Ceil(
+			float64(v.width) * c.xPercentage,
+		),
+	)
+	// Player 2 side is a mirror of player 1, so we offset the X position accordingly
+	var player2cropX int = int(
+		math.Abs( // the resulting value is negative, so we use this to make it positive
+			float64(
+				player1cropX - (v.width - cropWidth),
+			),
+		),
+	)
+
+	if side == Player1 {
+		cropX = player1cropX
 	}
 
 	if side == Player2 {
-		// todo:
+		cropX = player2cropX
 	}
 
-	return fmt.Errorf("invalid player side %d", side), ""
+	if cropX == -1 {
+		return fmt.Errorf("invalid player side %d", side), ""
+	}
+
+	return nil, fmt.Sprintf("crop=%d:%d:%d:%d", cropWidth, cropHeight, cropX, cropY)
 }
 
 // endregion Censor Boxes

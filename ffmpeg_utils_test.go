@@ -18,10 +18,10 @@ var smallVideo = videoResolution{
 	height: 540,
 }
 
-func TestCensorBox_CropFilterOutput(t *testing.T) {
+func TestCensorBox_CropFilterOutput_p1(t *testing.T) {
 	// title box
 	titleCensorBox := censorBox{
-		name:             "Title Box P1",
+		name:             "Title Box",
 		widthPercentage:  0.130208333333333,
 		heightPercentage: 0.046296296296296,
 		xPercentage:      0.15625,
@@ -35,6 +35,25 @@ func TestCensorBox_CropFilterOutput(t *testing.T) {
 	err, bigResult := titleCensorBox.CropFilterOutput(bigVideo, Player1)
 	assert.Nil(t, err)
 	assert.Equal(t, "crop=250:50:300:8", bigResult)
+}
+
+func TestCensorBox_CropFilterOutput_p2(t *testing.T) {
+	// title box
+	titleCensorBox := censorBox{
+		name:             "Title Box",
+		widthPercentage:  0.130208333333333,
+		heightPercentage: 0.046296296296296,
+		xPercentage:      0.15625,
+		yPercentage:      0.007407407407407,
+	}
+
+	err, smallResult := titleCensorBox.CropFilterOutput(smallVideo, Player2)
+	assert.Nil(t, err)
+	assert.Equal(t, "crop=125:25:685:4", smallResult)
+
+	err, bigResult := titleCensorBox.CropFilterOutput(bigVideo, Player2)
+	assert.Nil(t, err)
+	assert.Equal(t, "crop=250:50:1370:8", bigResult)
 }
 
 func TestVideoResolution(t *testing.T) {
