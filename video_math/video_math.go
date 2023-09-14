@@ -37,7 +37,7 @@ func (c CensorBox) PrettyJson() (string, error) {
 	return string(asJson), nil
 }
 
-/// internal: for tests, to help with the initial box calculations
+// internal: for tests, to help with the initial box calculations
 type hardcodedCensorBox struct {
 	name   string
 	width  int
