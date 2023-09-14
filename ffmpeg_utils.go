@@ -15,13 +15,28 @@ type censorBox struct {
 	yPercentage      float64
 }
 
-func (c censorBox) CropFilterOutput(v videoResolution) string {
-	cropWidth := int(math.Ceil(float64(v.width) * c.widthPercentage))
-	cropHeight := int(math.Ceil(float64(v.height) * c.heightPercentage))
-	cropX := int(math.Ceil(float64(v.width) * c.xPercentage))
-	cropY := int(math.Ceil(float64(v.height) * c.yPercentage))
+type PlayerSide int8
 
-	return fmt.Sprintf("crop=%d:%d:%d:%d", cropWidth, cropHeight, cropX, cropY)
+const (
+	Player1 PlayerSide = iota
+	Player2
+)
+
+func (c censorBox) CropFilterOutput(v videoResolution, side PlayerSide) (error, string) {
+	if side == Player1 {
+		cropWidth := int(math.Ceil(float64(v.width) * c.widthPercentage))
+		cropHeight := int(math.Ceil(float64(v.height) * c.heightPercentage))
+		cropX := int(math.Ceil(float64(v.width) * c.xPercentage))
+		cropY := int(math.Ceil(float64(v.height) * c.yPercentage))
+
+		return nil, fmt.Sprintf("crop=%d:%d:%d:%d", cropWidth, cropHeight, cropX, cropY)
+	}
+
+	if side == Player2 {
+		// todo:
+	}
+
+	return fmt.Errorf("invalid player side %d", side), ""
 }
 
 // endregion Censor Boxes
