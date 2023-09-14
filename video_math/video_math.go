@@ -1,19 +1,11 @@
-package main
+package video_math
 
 import (
 	"fmt"
 	"math"
 )
 
-// region Censor Boxes
-
-type censorBox struct {
-	name             string
-	widthPercentage  float64
-	heightPercentage float64
-	xPercentage      float64
-	yPercentage      float64
-}
+// region Players
 
 type PlayerSide int8
 
@@ -22,7 +14,19 @@ const (
 	Player2
 )
 
-func (c censorBox) CropFilterOutput(v videoResolution, side PlayerSide) (error, string) {
+// endregion Players
+
+// region Censor Boxes
+
+type CensorBox struct {
+	name             string
+	widthPercentage  float64
+	heightPercentage float64
+	xPercentage      float64
+	yPercentage      float64
+}
+
+func (c CensorBox) CropFilterOutput(v VideoResolution, side PlayerSide) (error, string) {
 	cropWidth := int(math.Ceil(float64(v.width) * c.widthPercentage))
 	cropHeight := int(math.Ceil(float64(v.height) * c.heightPercentage))
 	cropY := int(math.Ceil(float64(v.height) * c.yPercentage))
@@ -62,21 +66,25 @@ func (c censorBox) CropFilterOutput(v videoResolution, side PlayerSide) (error, 
 
 // region Video
 
-type videoResolution struct {
+type VideoResolution struct {
 	name   string
 	width  int
 	height int
 }
 
-func (v videoResolution) Name() string {
+func CreateVideoResolution(name string, width int, height int) VideoResolution {
+	return VideoResolution{name, width, height}
+}
+
+func (v VideoResolution) Name() string {
 	return v.name
 }
 
-func (v videoResolution) Width() int {
+func (v VideoResolution) Width() int {
 	return v.width
 }
 
-func (v videoResolution) Height() int {
+func (v VideoResolution) Height() int {
 	return v.height
 }
 
@@ -84,12 +92,14 @@ func (v videoResolution) Height() int {
 
 // region Blur settings
 
-type blurSettings struct {
-	value int
+type BlurSetting int
+
+func CreateBlurSetting(value int) BlurSetting {
+	return BlurSetting(value)
 }
 
-func (b blurSettings) FilterOutput() string {
-	return fmt.Sprintf("avgblur=%d", b.value)
+func (b BlurSetting) FilterOutput() string {
+	return fmt.Sprintf("avgblur=%d", b)
 }
 
 // endregion Blur settings

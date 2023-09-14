@@ -1,4 +1,4 @@
-package main
+package video_math
 
 import (
 	"testing"
@@ -6,21 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var bigVideo = videoResolution{
-	name:   "Big Video",
-	width:  1920,
-	height: 1080,
-}
-
-var smallVideo = videoResolution{
-	name:   "Small",
-	width:  960,
-	height: 540,
-}
+var bigVideo = CreateVideoResolution("Big Video", 1920, 1080)
+var smallVideo = CreateVideoResolution("Small Video", 960, 540)
 
 func TestCensorBox_CropFilterOutput_p1(t *testing.T) {
 	// title box
-	titleCensorBox := censorBox{
+	titleCensorBox := CensorBox{
 		name:             "Title Box",
 		widthPercentage:  0.130208333333333,
 		heightPercentage: 0.046296296296296,
@@ -39,7 +30,7 @@ func TestCensorBox_CropFilterOutput_p1(t *testing.T) {
 
 func TestCensorBox_CropFilterOutput_p2(t *testing.T) {
 	// title box
-	titleCensorBox := censorBox{
+	titleCensorBox := CensorBox{
 		name:             "Title Box",
 		widthPercentage:  0.130208333333333,
 		heightPercentage: 0.046296296296296,
@@ -57,21 +48,13 @@ func TestCensorBox_CropFilterOutput_p2(t *testing.T) {
 }
 
 func TestVideoResolution(t *testing.T) {
-	subject1 := videoResolution{
-		name:   "SD",
-		width:  720,
-		height: 480,
-	}
+	subject1 := CreateVideoResolution("SD", 720, 480)
 
 	assert.Equal(t, "SD", subject1.Name())
 	assert.Equal(t, 720, subject1.Width())
 	assert.Equal(t, 480, subject1.Height())
 
-	subject2 := videoResolution{
-		name:   "beeg",
-		width:  1920,
-		height: 1080,
-	}
+	subject2 := CreateVideoResolution("beeg", 1920, 1080)
 
 	assert.Equal(t, "beeg", subject2.Name())
 	assert.Equal(t, 1920, subject2.Width())
@@ -79,6 +62,6 @@ func TestVideoResolution(t *testing.T) {
 }
 
 func TestBlurSettings_FilterOutput(t *testing.T) {
-	assert.Equal(t, "avgblur=10", blurSettings{10}.FilterOutput())
-	assert.Equal(t, "avgblur=20", blurSettings{20}.FilterOutput())
+	assert.Equal(t, "avgblur=10", CreateBlurSetting(10).FilterOutput())
+	assert.Equal(t, "avgblur=20", CreateBlurSetting(20).FilterOutput())
 }
