@@ -1,6 +1,7 @@
 package video_math
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,11 +13,11 @@ var smallVideo = CreateVideoResolution("Small Video", 960, 540)
 func TestCensorBox_CropFilterOutput_p1(t *testing.T) {
 	// title box
 	titleCensorBox := CensorBox{
-		name:             "Title Box",
-		widthPercentage:  0.130208333333333,
-		heightPercentage: 0.046296296296296,
-		xPercentage:      0.15625,
-		yPercentage:      0.007407407407407,
+		Name:             "Title Box",
+		WidthPercentage:  0.130208333333333,
+		HeightPercentage: 0.046296296296296,
+		XPercentage:      0.15625,
+		YPercentage:      0.007407407407407,
 	}
 
 	err, smallResult := titleCensorBox.CropFilterOutput(smallVideo, Player1)
@@ -31,11 +32,11 @@ func TestCensorBox_CropFilterOutput_p1(t *testing.T) {
 func TestCensorBox_CropFilterOutput_p2(t *testing.T) {
 	// title box
 	titleCensorBox := CensorBox{
-		name:             "Title Box",
-		widthPercentage:  0.130208333333333,
-		heightPercentage: 0.046296296296296,
-		xPercentage:      0.15625,
-		yPercentage:      0.007407407407407,
+		Name:             "Title Box",
+		WidthPercentage:  0.130208333333333,
+		HeightPercentage: 0.046296296296296,
+		XPercentage:      0.15625,
+		YPercentage:      0.007407407407407,
 	}
 
 	err, smallResult := titleCensorBox.CropFilterOutput(smallVideo, Player2)
@@ -64,4 +65,58 @@ func TestVideoResolution(t *testing.T) {
 func TestBlurSettings_FilterOutput(t *testing.T) {
 	assert.Equal(t, "avgblur=10", CreateBlurSetting(10).FilterOutput())
 	assert.Equal(t, "avgblur=20", CreateBlurSetting(20).FilterOutput())
+}
+
+func TestHardcodedCensorBox_ToCensorBox(t *testing.T) {
+	title := hardcodedCensorBox{
+		name:   "Title Box",
+		width:  250,
+		height: 50,
+		x:      300,
+		y:      8,
+	}
+	expectedTitle := CensorBox{
+		Name:             "Title Box",
+		WidthPercentage:  0.130208333333333,
+		HeightPercentage: 0.046296296296296,
+		XPercentage:      0.15625,
+		YPercentage:      0.007407407407407,
+	}
+	titleResult := title.ToCensorBox(bigVideo)
+
+	fmt.Println(titleResult.PrettyJson())
+	assert.InDelta(t, expectedTitle.WidthPercentage, titleResult.WidthPercentage, 0.00001)
+	assert.InDelta(t, expectedTitle.HeightPercentage, titleResult.HeightPercentage, 0.00001)
+	assert.InDelta(t, expectedTitle.XPercentage, titleResult.XPercentage, 0.00001)
+	assert.InDelta(t, expectedTitle.YPercentage, titleResult.YPercentage, 0.00001)
+}
+
+func TestHardcodedCensorBox_ToCensorBox_moreBoxes(t *testing.T) {
+	censorBoxes := []CensorBox{
+		hardcodedCensorBox{
+			name:   "Title",
+			width:  250,
+			height: 50,
+			x:      300,
+			y:      8,
+		}.ToCensorBox(bigVideo),
+		hardcodedCensorBox{
+			name:   "Rank and Club",
+			width:  190,
+			height: 115,
+			x:      16,
+			y:      105,
+		}.ToCensorBox(bigVideo),
+		hardcodedCensorBox{
+			name:   "Username",
+			width:  345,
+			height: 40,
+			x:      205,
+			y:      106,
+		}.ToCensorBox(bigVideo),
+	}
+
+	for _, box := range censorBoxes {
+		fmt.Println(box.PrettyJson())
+	}
 }

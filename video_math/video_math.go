@@ -1,6 +1,7 @@
 package video_math
 
 import (
+	"encoding/json"
 	"fmt"
 	"math"
 )
@@ -19,23 +20,52 @@ const (
 // region Censor Boxes
 
 type CensorBox struct {
-	name             string
-	widthPercentage  float64
-	heightPercentage float64
-	xPercentage      float64
-	yPercentage      float64
+	Name             string
+	WidthPercentage  float64
+	HeightPercentage float64
+	XPercentage      float64
+	YPercentage      float64
 }
 
-func (c CensorBox) CropFilterOutput(v VideoResolution, side PlayerSide) (error, string) {
-	cropWidth := int(math.Ceil(float64(v.width) * c.widthPercentage))
-	cropHeight := int(math.Ceil(float64(v.height) * c.heightPercentage))
-	cropY := int(math.Ceil(float64(v.height) * c.yPercentage))
+func (c CensorBox) PrettyJson() (string, error) {
+	asJson, err := json.MarshalIndent(c, "", "  ")
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(asJson), nil
+}
+
+/// internal: for tests, to help with the initial box calculations
+type hardcodedCensorBox struct {
+	name   string
+	width  int
+	height int
+	x      int
+	y      int
+}
+
+func (box hardcodedCensorBox) ToCensorBox(v VideoResolution) CensorBox {
+	return CensorBox{
+		Name:             box.name,
+		WidthPercentage:  float64(box.width) / float64(v.width),
+		HeightPercentage: float64(box.height) / float64(v.height),
+		XPercentage:      float64(box.x) / float64(v.width),
+		YPercentage:      float64(box.y) / float64(v.height),
+	}
+}
+
+func (c CensorBox) CropFilterOutput(v VideoResolution, side PlayerSide) (string, error) {
+	cropWidth := int(math.Ceil(float64(v.width) * c.WidthPercentage))
+	cropHeight := int(math.Ceil(float64(v.height) * c.HeightPercentage))
+	cropY := int(math.Ceil(float64(v.height) * c.YPercentage))
 
 	var cropX int = -1
 
 	player1cropX := int(
 		math.Ceil(
-			float64(v.width) * c.xPercentage,
+			float64(v.width) * c.XPercentage,
 		),
 	)
 	// Player 2 side is a mirror of player 1, so we offset the X position accordingly
@@ -56,10 +86,10 @@ func (c CensorBox) CropFilterOutput(v VideoResolution, side PlayerSide) (error, 
 	}
 
 	if cropX == -1 {
-		return fmt.Errorf("invalid player side %d", side), ""
+		return "", fmt.Errorf("invalid player side %d", side)
 	}
 
-	return nil, fmt.Sprintf("crop=%d:%d:%d:%d", cropWidth, cropHeight, cropX, cropY)
+	return fmt.Sprintf("crop=%d:%d:%d:%d", cropWidth, cropHeight, cropX, cropY), nil
 }
 
 // endregion Censor Boxes
