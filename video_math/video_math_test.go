@@ -69,11 +69,11 @@ func TestBlurSettings_FilterOutput(t *testing.T) {
 
 func TestHardcodedCensorBox_ToCensorBox(t *testing.T) {
 	title := HardcodedCensorBox{
-		name:   "Title Box",
-		width:  250,
-		height: 50,
-		x:      300,
-		y:      8,
+		Name:   "Title Box",
+		Width:  250,
+		Height: 50,
+		X:      300,
+		Y:      8,
 	}
 	expectedTitle := CensorBox{
 		Name:             "Title Box",
@@ -94,25 +94,25 @@ func TestHardcodedCensorBox_ToCensorBox(t *testing.T) {
 func TestHardcodedCensorBox_ToCensorBox_moreBoxes(t *testing.T) {
 	censorBoxes := []CensorBox{
 		HardcodedCensorBox{
-			name:   "Title",
-			width:  250,
-			height: 50,
-			x:      300,
-			y:      8,
+			Name:   "Title",
+			Width:  250,
+			Height: 50,
+			X:      300,
+			Y:      8,
 		}.ToCensorBox(bigVideo),
 		HardcodedCensorBox{
-			name:   "Rank and Club",
-			width:  190,
-			height: 115,
-			x:      16,
-			y:      105,
+			Name:   "Rank and Club",
+			Width:  190,
+			Height: 115,
+			X:      16,
+			Y:      105,
 		}.ToCensorBox(bigVideo),
 		HardcodedCensorBox{
-			name:   "Username",
-			width:  345,
-			height: 40,
-			x:      205,
-			y:      106,
+			Name:   "Username",
+			Width:  345,
+			Height: 40,
+			X:      205,
+			Y:      106,
 		}.ToCensorBox(bigVideo),
 	}
 

@@ -39,20 +39,20 @@ func (c CensorBox) PrettyJson() (string, error) {
 
 // HardcodedCensorBox To assist with calculating a CensorBox when provided a VideoResolution
 type HardcodedCensorBox struct {
-	name   string
-	width  int
-	height int
-	x      int
-	y      int
+	Name   string
+	Width  int
+	Height int
+	X      int
+	Y      int
 }
 
 func (box HardcodedCensorBox) ToCensorBox(v VideoResolution) CensorBox {
 	return CensorBox{
-		Name:             box.name,
-		WidthPercentage:  float64(box.width) / float64(v.width),
-		HeightPercentage: float64(box.height) / float64(v.height),
-		XPercentage:      float64(box.x) / float64(v.width),
-		YPercentage:      float64(box.y) / float64(v.height),
+		Name:             box.Name,
+		WidthPercentage:  float64(box.Width) / float64(v.width),
+		HeightPercentage: float64(box.Height) / float64(v.height),
+		XPercentage:      float64(box.X) / float64(v.width),
+		YPercentage:      float64(box.Y) / float64(v.height),
 	}
 }
 
