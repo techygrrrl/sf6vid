@@ -54,7 +54,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("video resolution: %s", inputVideoResolution)
+	fmt.Printf("video resolution: %v", inputVideoResolution)
 
 	censorBoxes := []video_utils.CensorBox{
 		video_utils.FixedSizeCensorBox{
