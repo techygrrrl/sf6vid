@@ -68,7 +68,7 @@ func TestBlurSettings_FilterOutput(t *testing.T) {
 }
 
 func TestHardcodedCensorBox_ToCensorBox(t *testing.T) {
-	title := HardcodedCensorBox{
+	title := FixedSizeCensorBox{
 		Name:   "Title Box",
 		Width:  250,
 		Height: 50,
@@ -93,21 +93,21 @@ func TestHardcodedCensorBox_ToCensorBox(t *testing.T) {
 
 func TestHardcodedCensorBox_ToCensorBox_moreBoxes(t *testing.T) {
 	censorBoxes := []CensorBox{
-		HardcodedCensorBox{
+		FixedSizeCensorBox{
 			Name:   "Title",
 			Width:  250,
 			Height: 50,
 			X:      300,
 			Y:      8,
 		}.ToCensorBox(bigVideo),
-		HardcodedCensorBox{
+		FixedSizeCensorBox{
 			Name:   "Rank and Club",
 			Width:  190,
 			Height: 115,
 			X:      16,
 			Y:      105,
 		}.ToCensorBox(bigVideo),
-		HardcodedCensorBox{
+		FixedSizeCensorBox{
 			Name:   "Username",
 			Width:  345,
 			Height: 40,

@@ -37,8 +37,8 @@ func (c CensorBox) PrettyJson() (string, error) {
 	return string(asJson), nil
 }
 
-// HardcodedCensorBox To assist with calculating a CensorBox when provided a VideoResolution
-type HardcodedCensorBox struct {
+// FixedSizeCensorBox To assist with calculating a CensorBox when provided a VideoResolution
+type FixedSizeCensorBox struct {
 	Name   string
 	Width  int
 	Height int
@@ -46,7 +46,7 @@ type HardcodedCensorBox struct {
 	Y      int
 }
 
-func (box HardcodedCensorBox) ToCensorBox(v VideoResolution) CensorBox {
+func (box FixedSizeCensorBox) ToCensorBox(v VideoResolution) CensorBox {
 	return CensorBox{
 		Name:             box.Name,
 		WidthPercentage:  float64(box.Width) / float64(v.width),

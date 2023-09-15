@@ -46,42 +46,50 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		log.Fatalf("must specify flags either --p1 or --p2 (or both)")
 	}
 
-	// TODO: replace this with call to ffprobe
-	inputVideoResolution := video_utils.CreateVideoResolution("Video", 1920, 1080)
+	// We use this to calculate the percentage-based censor boxes
+	controlVideoResolution := video_utils.CreateVideoResolution("control", 1920, 1080)
+
+	inputVideoResolution, err := video_utils.GetVideoResolution(inputPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("video resolution: %s", inputVideoResolution)
 
 	censorBoxes := []video_utils.CensorBox{
-		video_utils.HardcodedCensorBox{
+		video_utils.FixedSizeCensorBox{
 			Name:   "Title",
 			Width:  250,
 			Height: 50,
 			X:      300,
 			Y:      8,
-		}.ToCensorBox(inputVideoResolution),
-		video_utils.HardcodedCensorBox{
+		}.ToCensorBox(controlVideoResolution),
+		video_utils.FixedSizeCensorBox{
 			Name:   "Rank and Club",
 			Width:  190,
 			Height: 115,
 			X:      16,
 			Y:      105,
-		}.ToCensorBox(inputVideoResolution),
-		video_utils.HardcodedCensorBox{
+		}.ToCensorBox(controlVideoResolution),
+		video_utils.FixedSizeCensorBox{
 			Name:   "Username",
 			Width:  345,
 			Height: 40,
 			X:      205,
 			Y:      106,
-		}.ToCensorBox(inputVideoResolution),
+		}.ToCensorBox(controlVideoResolution),
 	}
-	// TODO: remove - this is just for debugging
+
 	for _, box := range censorBoxes {
 		fmt.Println(box.PrettyJson())
 	}
 	fmt.Println("-------------------------")
+	//filterComplex := ""
 
 	if doP1 {
 		fmt.Println("should censor player 1: ")
 		for _, box := range censorBoxes {
-			output, err := box.CropFilterOutput(inputVideoResolution, video_utils.Player1)
+			output, err := box.CropFilterOutput(*inputVideoResolution, video_utils.Player1)
 
 			if err != nil {
 				log.Fatal(err)
@@ -97,7 +105,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		fmt.Println("should censor player 2: ")
 
 		for _, box := range censorBoxes {
-			output, err := box.CropFilterOutput(inputVideoResolution, video_utils.Player2)
+			output, err := box.CropFilterOutput(*inputVideoResolution, video_utils.Player2)
 
 			if err != nil {
 				log.Fatal(err)
