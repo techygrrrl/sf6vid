@@ -1,4 +1,4 @@
-package video_math
+package video_utils
 
 import (
 	"fmt"

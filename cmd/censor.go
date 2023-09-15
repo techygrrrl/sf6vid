@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/techygrrrl/sf6vid/video_math"
+	"github.com/techygrrrl/sf6vid/video_utils"
 )
 
 var doP1 bool
@@ -47,24 +47,24 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	}
 
 	// TODO: replace this with call to ffprobe
-	inputVideoResolution := video_math.CreateVideoResolution("Video", 1920, 1080)
+	inputVideoResolution := video_utils.CreateVideoResolution("Video", 1920, 1080)
 
-	censorBoxes := []video_math.CensorBox{
-		video_math.HardcodedCensorBox{
+	censorBoxes := []video_utils.CensorBox{
+		video_utils.HardcodedCensorBox{
 			Name:   "Title",
 			Width:  250,
 			Height: 50,
 			X:      300,
 			Y:      8,
 		}.ToCensorBox(inputVideoResolution),
-		video_math.HardcodedCensorBox{
+		video_utils.HardcodedCensorBox{
 			Name:   "Rank and Club",
 			Width:  190,
 			Height: 115,
 			X:      16,
 			Y:      105,
 		}.ToCensorBox(inputVideoResolution),
-		video_math.HardcodedCensorBox{
+		video_utils.HardcodedCensorBox{
 			Name:   "Username",
 			Width:  345,
 			Height: 40,
@@ -81,7 +81,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	if doP1 {
 		fmt.Println("should censor player 1: ")
 		for _, box := range censorBoxes {
-			output, err := box.CropFilterOutput(inputVideoResolution, video_math.Player1)
+			output, err := box.CropFilterOutput(inputVideoResolution, video_utils.Player1)
 
 			if err != nil {
 				log.Fatal(err)
@@ -97,7 +97,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		fmt.Println("should censor player 2: ")
 
 		for _, box := range censorBoxes {
-			output, err := box.CropFilterOutput(inputVideoResolution, video_math.Player2)
+			output, err := box.CropFilterOutput(inputVideoResolution, video_utils.Player2)
 
 			if err != nil {
 				log.Fatal(err)

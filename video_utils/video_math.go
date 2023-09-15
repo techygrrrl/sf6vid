@@ -1,4 +1,4 @@
-package video_math
+package video_utils
 
 import (
 	"encoding/json"
@@ -97,7 +97,7 @@ func (c CensorBox) CropFilterOutput(v VideoResolution, side PlayerSide) (string,
 // region Video
 
 type VideoResolution struct {
-	name   string
+	name   string // todo: consider removing this field
 	width  int
 	height int
 }
@@ -106,6 +106,7 @@ func CreateVideoResolution(name string, width int, height int) VideoResolution {
 	return VideoResolution{name, width, height}
 }
 
+// Name todo: consider removing this field
 func (v VideoResolution) Name() string {
 	return v.name
 }
