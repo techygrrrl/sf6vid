@@ -30,7 +30,7 @@ func GetVideoResolution(path string) (*VideoResolution, error) {
 
 	result := strings.Split(resolutionStr, "x")
 	if len(result) != 2 {
-		return nil, fmt.Errorf("invalid resolutionBytes: %s", resolutionStr)
+		return nil, fmt.Errorf("invalid resolution: %s", resolutionStr)
 	}
 
 	width, err := strconv.Atoi(result[0])
