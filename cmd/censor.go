@@ -3,27 +3,34 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 
 	"github.com/spf13/cobra"
+	"github.com/techygrrrl/sf6vid/file_utils"
 	"github.com/techygrrrl/sf6vid/video_utils"
 )
 
 var doP1 bool
 var doP2 bool
+var openFile bool
 var inputPath string
 var outputPath string
 
 var censorCmd = &cobra.Command{
 	Use:   "censor",
 	Short: "Censor the player information in a video",
-	Run:   runCensorCmd,
+	Long: `Censor either the player 1 or player 2 identifying information in the video.
+If the output path already exists, it will be replaced.
+`,
+	Run: runCensorCmd,
 }
 
 func init() {
 	// Command options
 	censorCmd.Flags().BoolVar(&doP1, "p1", false, "Censor player 1 side")
 	censorCmd.Flags().BoolVar(&doP2, "p2", false, "Censor player 2 side")
+	censorCmd.Flags().BoolVar(&openFile, "open", false, "Open the file after running this command")
 	censorCmd.Flags().StringVarP(&inputPath, "input", "i", "", "Path to input file")
 	censorCmd.Flags().StringVarP(&outputPath, "output", "o", "", "Path to output file")
 
@@ -40,8 +47,6 @@ func init() {
 }
 
 func runCensorCmd(cmd *cobra.Command, args []string) {
-	fmt.Println("censor called")
-
 	// Validation
 	var playerSide video_utils.PlayerSide = -1
 	if doP1 == doP2 {
@@ -62,9 +67,6 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("video resolution: %v", inputVideoResolution)
-
-	// TODO: build this slice based on the p1 and p2 flags
 	censorBoxes := []video_utils.CensorBox{
 		video_utils.FixedSizeCensorBox{
 			Name:   "Title",
@@ -89,11 +91,6 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		}.ToCensorBox(controlVideoResolution),
 	}
 
-	for _, box := range censorBoxes {
-		fmt.Println(box.PrettyJson())
-	}
-	fmt.Println("-------------------------")
-
 	// TODO: dynamic blur setting
 	blurSetting := video_utils.BlurSetting(4)
 
@@ -107,12 +104,16 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 
 	filterComplexChain, err := chainAssembler.AssembleChain(*inputVideoResolution, playerSide)
 
-	censorCommandOutput, err := exec.Command(
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = exec.Command(
 		"ffmpeg",
 		"-i", inputPath,
 		"-filter_complex", filterComplexChain,
 		"-map", "[base]",
-		//"-map \"[base]\"",
 		"-y",
 		outputPath,
 	).Output()
@@ -121,47 +122,10 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("succes???? \n\n\n%s", string(censorCommandOutput))
+	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPath)
+	fmt.Printf("✅ Censored video should be available at %s\n", fullFilePath)
 
-	//ffmpeg \
-	//-i samples/sample-720x480.mp4 \
-	//-filter_complex "[0:v]crop=94:23:113:4,boxblur=4[blur1];[0:v][blur1]overlay=113:4[blurred1];[0:v]crop=72:52:6:47,boxblur=4[blur2];[blurred1][blur2]overlay=6:47[blurred2];[0:v]crop=130:18:77:48,boxblur=4[blur3];[blurred2][blur3]overlay=77:48" \
-	//-y \
-	//samples/blurred.mp4
-
-	//currentIdx := 1
-	//filterComplex := ""
-
-	// Censor player 1
-	//if doP1 {
-	//	fmt.Println("should censor player 1: ")
-	//	for _, box := range censorBoxes {
-	//		output, err := box.CropFilterOutput(*inputVideoResolution, video_utils.Player1)
-	//
-	//		if err != nil {
-	//			log.Fatal(err)
-	//		}
-	//
-	//		// TODO: remove - this is just for debugging
-	//		fmt.Printf("Box: %s \nFilter output: %s \n\n", box.Name, output)
-	//	}
-	//	fmt.Println("-------------------------")
-	//}
-	//
-	//// Censor player 2
-	//if doP2 {
-	//	fmt.Println("should censor player 2: ")
-	//
-	//	for _, box := range censorBoxes {
-	//		output, err := box.CropFilterOutput(*inputVideoResolution, video_utils.Player2)
-	//
-	//		if err != nil {
-	//			log.Fatal(err)
-	//		}
-	//
-	//		// TODO: remove - this is just for debugging
-	//		fmt.Printf("Box: %s \nFilter output: %s \n\n", box.Name, output)
-	//	}
-	//	fmt.Println("-------------------------")
-	//}
+	if openFile {
+		err = file_utils.OpenFile(fullFilePath)
+	}
 }
