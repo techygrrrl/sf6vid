@@ -56,12 +56,12 @@ func (box FixedSizeCensorBox) ToCensorBox(v VideoResolution) CensorBox {
 	}
 }
 
-func (c CensorBox) CropFilterOutput(v VideoResolution, side PlayerSide) (string, error) {
-	cropWidth := int(math.Ceil(float64(v.width) * c.WidthPercentage))
-	cropHeight := int(math.Ceil(float64(v.height) * c.HeightPercentage))
-	cropY := int(math.Ceil(float64(v.height) * c.YPercentage))
+func (c CensorBox) GetYPositionForPlayerSide(v VideoResolution, side PlayerSide) int {
+	return int(math.Ceil(float64(v.height) * c.YPercentage))
+}
 
-	var cropX int = -1
+func (c CensorBox) GetXPositionForPlayerSide(v VideoResolution, side PlayerSide) (int, error) {
+	cropWidth := int(math.Ceil(float64(v.width) * c.WidthPercentage))
 
 	player1cropX := int(
 		math.Ceil(
@@ -69,7 +69,7 @@ func (c CensorBox) CropFilterOutput(v VideoResolution, side PlayerSide) (string,
 		),
 	)
 	// Player 2 side is a mirror of player 1, so we offset the X position accordingly
-	var player2cropX int = int(
+	player2cropX := int(
 		math.Abs( // the resulting value is negative, so we use this to make it positive
 			float64(
 				player1cropX - (v.width - cropWidth),
@@ -78,18 +78,50 @@ func (c CensorBox) CropFilterOutput(v VideoResolution, side PlayerSide) (string,
 	)
 
 	if side == Player1 {
-		cropX = player1cropX
+		return player1cropX, nil
 	}
 
 	if side == Player2 {
-		cropX = player2cropX
+		return player2cropX, nil
 	}
 
-	if cropX == -1 {
-		return "", fmt.Errorf("invalid player side %d", side)
+	return -1, fmt.Errorf("invalid player side: %d", side)
+}
+
+func (c CensorBox) GetWidthForPlayerSide(v VideoResolution, side PlayerSide) int {
+	return int(math.Ceil(float64(v.width) * c.WidthPercentage))
+}
+
+func (c CensorBox) GetHeightForPlayerSide(v VideoResolution, side PlayerSide) int {
+	return int(math.Ceil(float64(v.height) * c.HeightPercentage))
+}
+
+func (c CensorBox) CropFilterOutput(v VideoResolution, side PlayerSide) (string, error) {
+	cropX, err := c.GetXPositionForPlayerSide(v, side)
+	if err != nil {
+		return "", err
 	}
 
-	return fmt.Sprintf("crop=%d:%d:%d:%d", cropWidth, cropHeight, cropX, cropY), nil
+	cropWidth := c.GetWidthForPlayerSide(v, side)
+	cropHeight := c.GetHeightForPlayerSide(v, side)
+	cropY := c.GetYPositionForPlayerSide(v, side)
+
+	cropFilterOutput := fmt.Sprintf("crop=%d:%d:%d:%d", cropWidth, cropHeight, cropX, cropY)
+
+	return cropFilterOutput, nil
+}
+
+func (c CensorBox) OverlayOutput(v VideoResolution, side PlayerSide) (string, error) {
+	cropX, err := c.GetXPositionForPlayerSide(v, side)
+	if err != nil {
+		return "", err
+	}
+
+	cropY := c.GetYPositionForPlayerSide(v, side)
+
+	overlayOutput := fmt.Sprintf("overlay=%d:%d", cropX, cropY)
+
+	return overlayOutput, nil
 }
 
 // endregion Censor Boxes
@@ -126,11 +158,14 @@ func (v VideoResolution) Height() int {
 type BlurSetting int
 
 func CreateBlurSetting(value int) BlurSetting {
+	// todo: pass the CensorBox here as an argument and get the Math.min value
 	return BlurSetting(value)
 }
 
 func (b BlurSetting) FilterOutput() string {
+	// todo: pass the CensorBox here as an argument and get the Math.min value
 	return fmt.Sprintf("avgblur=%d", b)
+	//return fmt.Sprintf("boxblur=%d", b)
 }
 
 // endregion Blur settings

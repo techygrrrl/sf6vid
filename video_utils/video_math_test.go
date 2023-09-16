@@ -120,3 +120,18 @@ func TestHardcodedCensorBox_ToCensorBox_moreBoxes(t *testing.T) {
 		fmt.Println(box.PrettyJson())
 	}
 }
+
+func TestCensorBox_OverlayOutput(t *testing.T) {
+	// title box
+	titleCensorBox := CensorBox{
+		Name:             "Title Box",
+		WidthPercentage:  0.130208333333333,
+		HeightPercentage: 0.046296296296296,
+		XPercentage:      0.15625,
+		YPercentage:      0.007407407407407,
+	}
+
+	smallResult, err := titleCensorBox.OverlayOutput(smallVideo, Player2)
+	assert.Nil(t, err)
+	assert.Equal(t, "overlay=685:4", smallResult)
+}
