@@ -7,7 +7,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use: "sf6vid",
+	Use:     "sf6vid",
+	Version: "0.1.2",
 }
 
 func Execute() {
