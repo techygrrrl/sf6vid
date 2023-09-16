@@ -28,7 +28,13 @@ This tool uses [ffmpeg](https://ffmpeg.org/) on your system so the `ffmpeg` and 
 
 Just remove the binary from wherever you installed it.
 
-If you installed it with go, you can do `go uninstall sf6vid`.
+If you installed it with `go install`, you can find the binary by opening your Go path and deleting the binary.
+
+    open $GOPATH
+
+You can also delete the binary directly from the Go path:
+
+    rm $GOPATH/bin/sf6vid
 
 
 ## Contributors
