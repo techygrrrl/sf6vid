@@ -29,12 +29,17 @@ If the output path already exists, it will be replaced.
 
 func init() {
 	// Command options
+	// player config
 	censorCmd.Flags().BoolVar(&doP1, "p1", false, "Censor player 1 side")
 	censorCmd.Flags().BoolVar(&doP2, "p2", false, "Censor player 2 side")
-	censorCmd.Flags().BoolVar(&openFile, "open", false, "Open the file after running this command")
+
+	// files
 	censorCmd.Flags().StringVarP(&inputPath, "input", "i", "", "Path to input file")
 	censorCmd.Flags().StringVarP(&outputPath, "output", "o", "", "Path to output file")
-	censorCmd.Flags().IntVarP(&blurSetting, "blur", "b", 6, "Custom blur value for the box blur")
+	censorCmd.Flags().BoolVar(&openFile, "open", false, "Open the file after running this command")
+
+	// blur config
+	censorCmd.Flags().IntVar(&blurSetting, "blur", 6, "Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored)")
 	censorCmd.Flags().BoolVar(&shouldUseLegacyBlur, "box-blur", false, "Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)")
 
 	err := censorCmd.MarkFlagRequired("input")
