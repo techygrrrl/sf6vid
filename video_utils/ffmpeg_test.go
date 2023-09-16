@@ -8,7 +8,7 @@ import (
 
 func TestChainLink_Assemble(t *testing.T) {
 	currentIndex := 2
-	bigVideo := CreateVideoResolution("big", 1920, 1080)
+	bigVideo := CreateVideoResolution(1920, 1080)
 	side := Player1
 
 	subject := ChainLink{
@@ -30,7 +30,7 @@ func TestChainLink_Assemble(t *testing.T) {
 
 func TestChainAssembler_AssembleChain(t *testing.T) {
 	blurSetting := BlurSetting(4)
-	bigVideo := CreateVideoResolution("big", 1920, 1080)
+	bigVideo := CreateVideoResolution(1920, 1080)
 	side := Player1
 	censorBoxes := []CensorBox{
 		FixedSizeCensorBox{

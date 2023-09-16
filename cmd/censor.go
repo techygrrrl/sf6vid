@@ -61,7 +61,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	}
 
 	// We use this to calculate the percentage-based censor boxes
-	controlVideoResolution := video_utils.CreateVideoResolution("control", 1920, 1080)
+	controlVideoResolution := video_utils.CreateVideoResolution(1920, 1080)
 
 	inputVideoResolution, err := video_utils.GetVideoResolution(inputPath)
 	if err != nil {

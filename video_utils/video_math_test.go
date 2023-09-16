@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var bigVideo = CreateVideoResolution("Big Video", 1920, 1080)
-var smallVideo = CreateVideoResolution("Small Video", 960, 540)
+var bigVideo = CreateVideoResolution(1920, 1080)
+var smallVideo = CreateVideoResolution(960, 540)
 
 func TestCensorBox_CropFilterOutput_p1(t *testing.T) {
 	// title box
@@ -49,15 +49,13 @@ func TestCensorBox_CropFilterOutput_p2(t *testing.T) {
 }
 
 func TestVideoResolution(t *testing.T) {
-	subject1 := CreateVideoResolution("SD", 720, 480)
+	subject1 := CreateVideoResolution(720, 480)
 
-	assert.Equal(t, "SD", subject1.Name())
 	assert.Equal(t, 720, subject1.Width())
 	assert.Equal(t, 480, subject1.Height())
 
-	subject2 := CreateVideoResolution("beeg", 1920, 1080)
+	subject2 := CreateVideoResolution(1920, 1080)
 
-	assert.Equal(t, "beeg", subject2.Name())
 	assert.Equal(t, 1920, subject2.Width())
 	assert.Equal(t, 1080, subject2.Height())
 }

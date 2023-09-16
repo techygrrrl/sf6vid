@@ -42,7 +42,7 @@ func GetVideoResolution(path string) (*VideoResolution, error) {
 		panic(err)
 	}
 
-	videoResolution := CreateVideoResolution("", width, height)
+	videoResolution := CreateVideoResolution(width, height)
 
 	return &videoResolution, nil
 }
