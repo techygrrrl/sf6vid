@@ -1,42 +1,7 @@
 # sf6vid
 
-Censor player information in a Street Fighter 6 game play video.
+Censor player information from your Street Fighter 6 game play videos.
 
-- [Install](#install)
-  - [Prerequisites / Dependencies](#prerequisites--dependencies)
-- [Uninstall](#uninstall)
-- [Contributors](#contributors)
+For installation and usage instructions, see the [wiki](https://github.com/techygrrrl/sf6vid/wiki).
 
 ![](screenshot.png)
-
-
-## Install
-
-Download the release for your operating system from the [releases page](https://github.com/techygrrrl/sf6vid/releases). You can put this somewhere on your path, e.g. in macOS and Linux, you can put it in `/usr/local/bin` or `/usr/bin`.
-
-If you use Go and would like to install it with `go install` you can do the following:
-
-    go install github.com/techygrrrl/sf6vid@latest
-
-
-### Prerequisites / Dependencies
-
-This tool uses [ffmpeg](https://ffmpeg.org/) on your system so the `ffmpeg` and `ffprobe` commands must be available.
-
-
-## Uninstall
-
-Just remove the binary from wherever you installed it.
-
-If you installed it with `go install`, you can find the binary by opening your Go path and deleting the binary.
-
-    open $GOPATH
-
-You can also delete the binary directly from the Go path:
-
-    rm $GOPATH/bin/sf6vid
-
-
-## Contributors
-
-Built by me for my [Twitch streams (techygrrrl)](https://www.twitch.tv/techygrrrl) with ffmpeg-related help from [TheIdOfAlan](https://www.twitch.tv/theidofalan) and [Kodder](https://www.twitch.tv/kodder).
