@@ -23,7 +23,7 @@ func CreateChainAssembler(chainLinks []ChainLink) ChainAssembler {
 }
 
 func (c ChainAssembler) AssembleChain(v VideoResolution, side PlayerSide) (string, error) {
-	output := make([]string, len(c.ChainLinks)+1)
+	output := make([]string, len(c.ChainLinks)+2)
 	output[0] = "[0:v]copy[base]"
 
 	for i, chainLink := range c.ChainLinks {
@@ -36,6 +36,8 @@ func (c ChainAssembler) AssembleChain(v VideoResolution, side PlayerSide) (strin
 
 		output[currentIndex] = chainLinkOutput
 	}
+
+	output[len(c.ChainLinks)+1] = "[0:a]acopy"
 
 	stringOutput := strings.Join(output, ";")
 
