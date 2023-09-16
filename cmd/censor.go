@@ -86,7 +86,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		video_utils.FixedSizeCensorBox{
 			Name:   "Rank and Club",
 			Width:  190,
-			Height: 115,
+			Height: 120,
 			X:      16,
 			Y:      105,
 		}.ToCensorBox(controlVideoResolution),
