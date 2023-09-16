@@ -21,9 +21,15 @@ func GetVideoResolution(path string) (*VideoResolution, error) {
 	}
 
 	// Resulting output is something like this: 1080x720
-	resolutionStr := strings.ReplaceAll(
-		string(resolutionBytes),
+	resolutionStr := string(resolutionBytes)
+	resolutionStr = strings.ReplaceAll(
+		resolutionStr,
 		"\n",
+		"",
+	)
+	resolutionStr = strings.ReplaceAll(
+		resolutionStr,
+		"\r",
 		"",
 	)
 
