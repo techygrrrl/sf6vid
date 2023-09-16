@@ -13,6 +13,7 @@ import (
 var doP1 bool
 var doP2 bool
 var openFile bool
+var shouldUseLegacyBlur bool
 var inputPath string
 var outputPath string
 var blurSetting int
@@ -33,7 +34,8 @@ func init() {
 	censorCmd.Flags().BoolVar(&openFile, "open", false, "Open the file after running this command")
 	censorCmd.Flags().StringVarP(&inputPath, "input", "i", "", "Path to input file")
 	censorCmd.Flags().StringVarP(&outputPath, "output", "o", "", "Path to output file")
-	censorCmd.Flags().IntVarP(&blurSetting, "blur", "b", 6, "Custom blur value")
+	censorCmd.Flags().IntVarP(&blurSetting, "blur", "b", 6, "Custom blur value for the box blur")
+	censorCmd.Flags().BoolVar(&shouldUseLegacyBlur, "box-blur", false, "Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)")
 
 	err := censorCmd.MarkFlagRequired("input")
 	if err != nil {
@@ -94,7 +96,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 
 	chainLinks := make([]video_utils.ChainLink, len(censorBoxes))
 	for i, box := range censorBoxes {
-		chainLink := video_utils.CreateChainLink(box, video_utils.BlurSetting(blurSetting))
+		chainLink := video_utils.CreateChainLink(box, video_utils.CreateBlurSetting(blurSetting, !shouldUseLegacyBlur))
 		chainLinks[i] = chainLink
 	}
 

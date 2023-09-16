@@ -61,8 +61,8 @@ func TestVideoResolution(t *testing.T) {
 }
 
 func TestBlurSettings_FilterOutput(t *testing.T) {
-	assert.Equal(t, "boxblur=10", CreateBlurSetting(10).FilterOutput())
-	assert.Equal(t, "boxblur=20", CreateBlurSetting(20).FilterOutput())
+	assert.Equal(t, "boxblur=10", CreateBlurSetting(10, false).FilterOutput())
+	assert.Equal(t, "boxblur=20", CreateBlurSetting(20, false).FilterOutput())
 }
 
 func TestHardcodedCensorBox_ToCensorBox(t *testing.T) {
