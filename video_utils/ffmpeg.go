@@ -23,14 +23,9 @@ func CreateChainAssembler(chainLinks []ChainLink) ChainAssembler {
 }
 
 func (c ChainAssembler) AssembleChain(v VideoResolution, side PlayerSide) (string, error) {
-	//output := []string{
-	//	"[0:v]copy[base]",
-	//}
-
 	output := make([]string, len(c.ChainLinks)+1)
 	output[0] = "[0:v]copy[base]"
 
-	//output := "[0:v]copy[base];"
 	for i, chainLink := range c.ChainLinks {
 		currentIndex := i + 1
 
@@ -40,7 +35,6 @@ func (c ChainAssembler) AssembleChain(v VideoResolution, side PlayerSide) (strin
 		}
 
 		output[currentIndex] = chainLinkOutput
-		//output = append(output, chainLinkOutput)
 	}
 
 	stringOutput := strings.Join(output, ";")
@@ -69,22 +63,6 @@ func (c ChainLink) AssembleChainLink(currentIndex int, v VideoResolution, side P
 		currentIndex,
 		overlayOutput,
 	)
-	//CMD="$CMD[0:v]crop=94:23:0:0,boxblur=4[blur0];"
-	//CMD="$CMD[base][blur0]overlay=113:4[base];"
-
-	//output := fmt.Sprintf(
-	//	"[0:v]%s,%s[blur%d];[%s][blur%d]%s[blurred%d]",
-	//	cropFilterOutput,
-	//	c.BlurSetting.FilterOutput(),
-	//	currentIndex,
-	//	c.OverlaySource,
-	//	currentIndex,
-	//	overlayOutput,
-	//	currentIndex,
-	//)
 
 	return output, nil
 }
-
-//[0:v]crop=94:23:113:4,boxblur=0[blur1]; DONE
-//[0:v][blur1]overlay=113:4[blurred1]; TODO

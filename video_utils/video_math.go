@@ -164,8 +164,7 @@ func CreateBlurSetting(value int) BlurSetting {
 
 func (b BlurSetting) FilterOutput() string {
 	// todo: pass the CensorBox here as an argument and get the Math.min value
-	return fmt.Sprintf("avgblur=%d", b)
-	//return fmt.Sprintf("boxblur=%d", b)
+	return fmt.Sprintf("boxblur=%d", b)
 }
 
 // endregion Blur settings

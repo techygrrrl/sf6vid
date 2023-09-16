@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 
@@ -16,6 +15,7 @@ var doP2 bool
 var openFile bool
 var inputPath string
 var outputPath string
+var blurSetting int
 
 var censorCmd = &cobra.Command{
 	Use:   "censor",
@@ -33,14 +33,15 @@ func init() {
 	censorCmd.Flags().BoolVar(&openFile, "open", false, "Open the file after running this command")
 	censorCmd.Flags().StringVarP(&inputPath, "input", "i", "", "Path to input file")
 	censorCmd.Flags().StringVarP(&outputPath, "output", "o", "", "Path to output file")
+	censorCmd.Flags().IntVarP(&blurSetting, "blur", "b", 6, "Custom blur value")
 
 	err := censorCmd.MarkFlagRequired("input")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	err = censorCmd.MarkFlagRequired("output")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	rootCmd.AddCommand(censorCmd)
@@ -50,7 +51,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	// Validation
 	var playerSide video_utils.PlayerSide = -1
 	if doP1 == doP2 {
-		log.Fatalf("must specify only one of --p1 or --p2")
+		panic("must specify only one of --p1 or --p2")
 	}
 	if doP1 {
 		playerSide = video_utils.Player1
@@ -64,7 +65,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 
 	inputVideoResolution, err := video_utils.GetVideoResolution(inputPath)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	censorBoxes := []video_utils.CensorBox{
@@ -91,12 +92,9 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		}.ToCensorBox(controlVideoResolution),
 	}
 
-	// TODO: dynamic blur setting
-	blurSetting := video_utils.BlurSetting(4)
-
 	chainLinks := make([]video_utils.ChainLink, len(censorBoxes))
 	for i, box := range censorBoxes {
-		chainLink := video_utils.CreateChainLink(box, blurSetting)
+		chainLink := video_utils.CreateChainLink(box, video_utils.BlurSetting(blurSetting))
 		chainLinks[i] = chainLink
 	}
 
@@ -106,7 +104,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 
 	cwd, err := os.Getwd()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	_, err = exec.Command(
@@ -119,7 +117,8 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	).Output()
 
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("💥 could not process the video. try lowering the blur value from %d\n", blurSetting)
+		os.Exit(1)
 	}
 
 	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPath)

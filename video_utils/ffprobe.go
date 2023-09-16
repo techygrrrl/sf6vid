@@ -2,7 +2,6 @@ package video_utils
 
 import (
 	"fmt"
-	"log"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -35,12 +34,12 @@ func GetVideoResolution(path string) (*VideoResolution, error) {
 
 	width, err := strconv.Atoi(result[0])
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	height, err := strconv.Atoi(result[1])
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	videoResolution := CreateVideoResolution("", width, height)

@@ -25,7 +25,7 @@ func TestChainLink_Assemble(t *testing.T) {
 	result, err := subject.AssembleChainLink(currentIndex, bigVideo, side)
 
 	assert.Nil(t, err)
-	assert.Equal(t, "[0:v]crop=251:50:300:8,avgblur=4[blur2];[base][blur2]overlay=300:8[base]", result)
+	assert.Equal(t, "[0:v]crop=251:50:300:8,boxblur=4[blur2];[base][blur2]overlay=300:8[base]", result)
 }
 
 func TestChainAssembler_AssembleChain(t *testing.T) {
@@ -65,5 +65,5 @@ func TestChainAssembler_AssembleChain(t *testing.T) {
 	result, err := subject.AssembleChain(bigVideo, side)
 
 	assert.Nil(t, err)
-	assert.Equal(t, "foo", result)
+	assert.Equal(t, "[0:v]copy[base];[0:v]crop=251:50:300:8,boxblur=4[blur1];[base][blur1]overlay=300:8[base];[0:v]crop=190:115:16:105,boxblur=4[blur2];[base][blur2]overlay=16:105[base];[0:v]crop=345:40:205:106,boxblur=4[blur3];[base][blur3]overlay=205:106[base]", result)
 }
