@@ -149,14 +149,21 @@ func (v VideoResolution) Height() int {
 
 // region Blur settings
 
-type BlurSetting int
-
-func CreateBlurSetting(value int) BlurSetting {
-	return BlurSetting(value)
+type BlurSettings struct {
+	BoxBlur  int
+	Pixelize bool
 }
 
-func (b BlurSetting) FilterOutput() string {
-	return fmt.Sprintf("boxblur=%d", b)
+func CreateBlurSetting(value int, pixelize bool) BlurSettings {
+	return BlurSettings{value, pixelize}
+}
+
+func (b BlurSettings) FilterOutput() string {
+	if b.Pixelize {
+		return "pixelize=16:16:avg"
+	}
+
+	return fmt.Sprintf("boxblur=%d", b.BoxBlur)
 }
 
 // endregion Blur settings

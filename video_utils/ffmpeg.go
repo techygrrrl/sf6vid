@@ -7,10 +7,10 @@ import (
 
 type ChainLink struct {
 	CensorBox   CensorBox
-	BlurSetting BlurSetting
+	BlurSetting BlurSettings
 }
 
-func CreateChainLink(censorBox CensorBox, blurSetting BlurSetting) ChainLink {
+func CreateChainLink(censorBox CensorBox, blurSetting BlurSettings) ChainLink {
 	return ChainLink{censorBox, blurSetting}
 }
 
