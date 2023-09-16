@@ -5,6 +5,7 @@ Censor player information in a Street Fighter 6 game play video.
 - [Install](#install)
   - [Prerequisites / Dependencies](#prerequisites--dependencies)
 - [Uninstall](#uninstall)
+- [Contributors](#contributors)
 
 ![](screenshot.png)
 
@@ -28,3 +29,8 @@ This tool uses [ffmpeg](https://ffmpeg.org/) on your system so the `ffmpeg` and 
 Just remove the binary from wherever you installed it.
 
 If you installed it with go, you can do `go uninstall sf6vid`.
+
+
+## Contributors
+
+Built by me for my [Twitch streams (techygrrrl)](https://www.twitch.tv/techygrrrl) with ffmpeg-related help from [TheIdOfAlan](https://www.twitch.tv/theidofalan) and [Kodder](https://www.twitch.tv/kodder).
