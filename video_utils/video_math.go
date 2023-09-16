@@ -156,7 +156,8 @@ func CreateBlurSetting(value int) BlurSetting {
 }
 
 func (b BlurSetting) FilterOutput() string {
-	return fmt.Sprintf("boxblur=%d", b)
+	return "scale=iw/16:ih/16,scale=16*iw:16*ih:flags=neighbor[tmp]"
+	//return fmt.Sprintf("boxblur=%d", b)
 }
 
 // endregion Blur settings

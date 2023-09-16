@@ -58,11 +58,11 @@ func (c ChainLink) AssembleChainLink(currentIndex int, v VideoResolution, side P
 	blurFilterOutput := c.BlurSetting.FilterOutput()
 
 	output := fmt.Sprintf(
-		"[0:v]%s,%s[blur%d];[base][blur%d]%s[base]",
+		"[0:v]%s,%s;[base][tmp]%s[base]",
 		cropFilterOutput,
 		blurFilterOutput,
-		currentIndex,
-		currentIndex,
+		//currentIndex,
+		//currentIndex,
 		overlayOutput,
 	)
 
