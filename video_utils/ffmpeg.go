@@ -3,6 +3,7 @@ package video_utils
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 type ChainLink struct {
@@ -67,4 +68,34 @@ func (c ChainLink) AssembleChainLink(currentIndex int, v VideoResolution, side P
 	)
 
 	return output, nil
+}
+
+func FormatDurationForFFmpeg(duration time.Duration) string {
+	d := duration.Seconds()
+
+	hour := int(d / 3600)
+	minute := int(d/60) % 60
+	second := int(d) % 60
+
+	return fmt.Sprintf("%02d:%02d:%02d", hour, minute, second)
+}
+
+func FormattedDurationArgsForFFmpeg(start time.Duration, end time.Duration) []string {
+	// if there is neither a start or end time, we assume the user did not provide any trimming configuration
+	if start == 0 && end == 0 {
+		return []string{}
+	}
+
+	var args []string
+	if start != 0 {
+		// configure start time
+		args = []string{"-ss", FormatDurationForFFmpeg(start)}
+	}
+
+	if end != 0 {
+		// configure end time
+		args = append(args, "-to", FormatDurationForFFmpeg(end))
+	}
+
+	return args
 }
