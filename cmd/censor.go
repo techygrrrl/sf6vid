@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/techygrrrl/sf6vid/file_utils"
@@ -17,6 +18,8 @@ var shouldUseLegacyBlur bool
 var inputPath string
 var outputPath string
 var blurSetting int
+var startTime time.Duration
+var endTime time.Duration
 
 var censorCmd = &cobra.Command{
 	Use:   "censor",
@@ -41,6 +44,10 @@ func init() {
 	// blur config
 	censorCmd.Flags().IntVar(&blurSetting, "blur", 6, "Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored)")
 	censorCmd.Flags().BoolVar(&shouldUseLegacyBlur, "box-blur", false, "Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)")
+
+	// trim config
+	censorCmd.Flags().DurationVar(&startTime, "start", time.Duration(0), "Optional start time for trimming the video")
+	censorCmd.Flags().DurationVar(&endTime, "end", time.Duration(0), "Optional start time for trimming the video")
 
 	err := censorCmd.MarkFlagRequired("input")
 	if err != nil {
@@ -114,14 +121,35 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		panic(err)
 	}
 
-	_, err = exec.Command(
-		"ffmpeg",
+	commandArgs := []string{
 		"-i", inputPath,
 		"-filter_complex", filterComplexChain,
 		"-map", "[base]",
 		"-y",
-		outputPath,
-	).Output()
+	}
+
+	// if there is either a start time or an end time, we assume the user wants to trim the video.
+	// ffmpeg does a good job if one of these is omitted.
+	if startTime != 0 || endTime != 0 {
+		// start time args
+		commandArgs = append(
+			commandArgs,
+			"-ss", video_utils.FormatDuration(startTime),
+		)
+
+		// end time args. if end time is 0, we assume the user omitted this configuration.
+		if endTime != 0 {
+			commandArgs = append(
+				commandArgs,
+				"-to", video_utils.FormatDuration(endTime),
+			)
+		}
+	}
+
+	// append the output path
+	commandArgs = append(commandArgs, outputPath)
+
+	_, err = exec.Command("ffmpeg", commandArgs...).Output()
 
 	if err != nil {
 		fmt.Printf("💥 could not process the video. try lowering the blur value from %d\n", blurSetting)
