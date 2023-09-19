@@ -128,23 +128,9 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		"-y",
 	}
 
-	// if there is either a start time or an end time, we assume the user wants to trim the video.
-	// ffmpeg does a good job if one of these is omitted.
-	if startTime != 0 || endTime != 0 {
-		// start time args
-		commandArgs = append(
-			commandArgs,
-			"-ss", video_utils.FormatDuration(startTime),
-		)
+	durationArgs := video_utils.FormattedDurationArgsForFFmpeg(startTime, endTime)
 
-		// end time args. if end time is 0, we assume the user omitted this configuration.
-		if endTime != 0 {
-			commandArgs = append(
-				commandArgs,
-				"-to", video_utils.FormatDuration(endTime),
-			)
-		}
-	}
+	commandArgs = append(commandArgs, durationArgs...)
 
 	// append the output path
 	commandArgs = append(commandArgs, outputPath)
