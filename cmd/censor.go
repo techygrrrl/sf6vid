@@ -11,16 +11,6 @@ import (
 	"github.com/techygrrrl/sf6vid/video_utils"
 )
 
-var doP1 bool
-var doP2 bool
-var openFile bool
-var shouldUseLegacyBlur bool
-var inputPath string
-var outputPath string
-var blurSetting int
-var startTime time.Duration
-var endTime time.Duration
-
 var censorCmd = &cobra.Command{
 	Use:   "censor",
 	Short: "Censor the player information in a video",
@@ -33,21 +23,21 @@ If the output path already exists, it will be replaced.
 func init() {
 	// Command options
 	// player config
-	censorCmd.Flags().BoolVar(&doP1, "p1", false, "Censor player 1 side")
-	censorCmd.Flags().BoolVar(&doP2, "p2", false, "Censor player 2 side")
+	censorCmd.Flags().Bool("p1", false, "Censor player 1 side")
+	censorCmd.Flags().Bool("p2", false, "Censor player 2 side")
 
 	// files
-	censorCmd.Flags().StringVarP(&inputPath, "input", "i", "", "Path to input file")
-	censorCmd.Flags().StringVarP(&outputPath, "output", "o", "", "Path to output file")
-	censorCmd.Flags().BoolVar(&openFile, "open", false, "Open the file after running this command")
+	censorCmd.Flags().StringP("input", "i", "", "Path to input file")
+	censorCmd.Flags().StringP("output", "o", "", "Path to output file")
+	censorCmd.Flags().Bool("open", false, "Open the file after running this command")
 
 	// blur config
-	censorCmd.Flags().IntVar(&blurSetting, "blur", 6, "Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored)")
-	censorCmd.Flags().BoolVar(&shouldUseLegacyBlur, "box-blur", false, "Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)")
+	censorCmd.Flags().Int("blur", 6, "Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored)")
+	censorCmd.Flags().Bool("box-blur", false, "Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)")
 
 	// trim config
-	censorCmd.Flags().DurationVar(&startTime, "start", time.Duration(0), "Optional start time for trimming the video")
-	censorCmd.Flags().DurationVar(&endTime, "end", time.Duration(0), "Optional start time for trimming the video")
+	censorCmd.Flags().Duration("start", time.Duration(0), "Optional start time for trimming the video")
+	censorCmd.Flags().Duration("end", time.Duration(0), "Optional start time for trimming the video")
 
 	err := censorCmd.MarkFlagRequired("input")
 	if err != nil {
@@ -62,6 +52,51 @@ func init() {
 }
 
 func runCensorCmd(cmd *cobra.Command, args []string) {
+	openFile, err := cmd.Flags().GetBool("open")
+	if err != nil {
+		panic(err)
+	}
+
+	doP1, err := cmd.Flags().GetBool("p1")
+	if err != nil {
+		panic(err)
+	}
+
+	doP2, err := cmd.Flags().GetBool("p2")
+	if err != nil {
+		panic(err)
+	}
+
+	inputPath, err := cmd.Flags().GetString("input")
+	if err != nil {
+		panic(err)
+	}
+
+	outputPath, err := cmd.Flags().GetString("output")
+	if err != nil {
+		panic(err)
+	}
+
+	blurValue, err := cmd.Flags().GetInt("blur")
+	if err != nil {
+		panic(err)
+	}
+
+	shouldUseLegacyBlur, err := cmd.Flags().GetBool("box-blur")
+	if err != nil {
+		panic(err)
+	}
+
+	startTime, err := cmd.Flags().GetDuration("start")
+	if err != nil {
+		panic(err)
+	}
+
+	endTime, err := cmd.Flags().GetDuration("end")
+	if err != nil {
+		panic(err)
+	}
+
 	// Validation
 	var playerSide video_utils.PlayerSide = -1
 	if doP1 == doP2 {
@@ -108,7 +143,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 
 	chainLinks := make([]video_utils.ChainLink, len(censorBoxes))
 	for i, box := range censorBoxes {
-		chainLink := video_utils.CreateChainLink(box, video_utils.CreateBlurSetting(blurSetting, !shouldUseLegacyBlur))
+		chainLink := video_utils.CreateChainLink(box, video_utils.CreateBlurSetting(blurValue, !shouldUseLegacyBlur))
 		chainLinks[i] = chainLink
 	}
 
@@ -138,7 +173,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	_, err = exec.Command("ffmpeg", commandArgs...).Output()
 
 	if err != nil {
-		fmt.Printf("💥 could not process the video. try lowering the blur value from %d\n", blurSetting)
+		fmt.Printf("💥 could not process the video. try lowering the blur value from %d\n", blurValue)
 		os.Exit(1)
 	}
 
