@@ -24,16 +24,16 @@ Usage:
   sf6vid censor [flags]
 
 Flags:
-      --blur int         Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored) (default 6)
-      --box-blur         Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)
-      --end duration     Optional start time for trimming the video
-  -h, --help             help for censor
-  -i, --input string     Path to input file
-      --open             Open the file after running this command
-  -o, --output string    Path to output file
       --p1               Censor player 1 side
       --p2               Censor player 2 side
+  -i, --input string     Path to input file
+  -o, --output string    Path to output file
+      --open             Open the file after running this command
+      --blur int         Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored) (default 6)
+      --box-blur         Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)
       --start duration   Optional start time for trimming the video
+      --end duration     Optional start time for trimming the video
+  -h, --help             help for censor
 ```
 ### trim
 ```
@@ -47,10 +47,10 @@ Usage:
   sf6vid trim [flags]
 
 Flags:
+  -i, --input string     Path to input file
+  -o, --output string    Path to output file
+      --open             Open the file after running this command
+      --start duration   Start time for trimming the video
       --end duration     End time for trimming the video
   -h, --help             help for trim
-  -i, --input string     Path to input file
-      --open             Open the file after running this command
-  -o, --output string    Path to output file
-      --start duration   Start time for trimming the video
 ```

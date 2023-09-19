@@ -22,6 +22,8 @@ If the output path already exists, it will be replaced.
 
 func init() {
 	// Command options
+	censorCmd.Flags().SortFlags = false
+
 	// player config
 	censorCmd.Flags().Bool("p1", false, "Censor player 1 side")
 	censorCmd.Flags().Bool("p2", false, "Censor player 2 side")

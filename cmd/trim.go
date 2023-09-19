@@ -24,6 +24,8 @@ At least one is required.
 }
 
 func init() {
+	trimCmd.Flags().SortFlags = false
+
 	// files
 	trimCmd.Flags().StringP("input", "i", "", "Path to input file")
 	trimCmd.Flags().StringP("output", "o", "", "Path to output file")

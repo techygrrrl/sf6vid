@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+go install
+
 rm USAGE.md
 
 echo "# Usage" >> USAGE.md
