@@ -13,8 +13,7 @@ echo '```' >> USAGE.md
 sf6vid censor --help >> USAGE.md
 echo '```' >> USAGE.md
 
-# And when it exists
-# echo "### trim" >> USAGE.md
-# echo '```' >> USAGE.md
-# sf6vid trim --help >> USAGE.md
-# echo '```' >> USAGE.md
+echo "### trim" >> USAGE.md
+echo '```' >> USAGE.md
+sf6vid trim --help >> USAGE.md
+echo '```' >> USAGE.md

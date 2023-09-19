@@ -7,6 +7,7 @@ Usage:
 Available Commands:
   censor      Censor the player information in a video
   help        Help about any command
+  trim        Trim the video for the provided start and/or end times
 
 Flags:
   -h, --help      help for sf6vid
@@ -23,12 +24,33 @@ Usage:
   sf6vid censor [flags]
 
 Flags:
-      --blur int        Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored) (default 6)
-      --box-blur        Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)
-  -h, --help            help for censor
-  -i, --input string    Path to input file
-      --open            Open the file after running this command
-  -o, --output string   Path to output file
-      --p1              Censor player 1 side
-      --p2              Censor player 2 side
+      --blur int         Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored) (default 6)
+      --box-blur         Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)
+      --end duration     Optional start time for trimming the video
+  -h, --help             help for censor
+  -i, --input string     Path to input file
+      --open             Open the file after running this command
+  -o, --output string    Path to output file
+      --p1               Censor player 1 side
+      --p2               Censor player 2 side
+      --start duration   Optional start time for trimming the video
+```
+### trim
+```
+You can provide one or both flags --start and --end.
+If you omit --start, the original start time of the video will be used.
+If you omit --end, the original end time of the video will be used.
+At least one is required.
+--start and --end use duration syntax, e.g. 5m30s for 5 minutes and 30 seconds
+
+Usage:
+  sf6vid trim [flags]
+
+Flags:
+      --end duration     End time for trimming the video
+  -h, --help             help for trim
+  -i, --input string     Path to input file
+      --open             Open the file after running this command
+  -o, --output string    Path to output file
+      --start duration   Start time for trimming the video
 ```
