@@ -9,6 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/techygrrrl/sf6vid/file_utils"
+	"github.com/techygrrrl/sf6vid/string_utils"
 	"github.com/techygrrrl/sf6vid/video_utils"
 )
 
@@ -178,7 +179,16 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	commandArgs = append(commandArgs, durationArgs...)
 
 	// append the output path
-	commandArgs = append(commandArgs, outputPath)
+	var censoredPlayerString string
+	if doP1 {
+		censoredPlayerString = "p1"
+	} else {
+		censoredPlayerString = "p2"
+	}
+
+	durationSuffix := fmt.Sprintf("censored_%s_%s-%s", censoredPlayerString, startTime.String(), endTime.String())
+	outputPathWithCensoredSuffix := string_utils.AppendStringToFileName(outputPath, durationSuffix)
+	commandArgs = append(commandArgs, outputPathWithCensoredSuffix)
 
 	if flagUseDebug {
 		fmt.Printf("⚙️  Executing command:\n\nffmpeg %s\n\n", strings.Join(commandArgs, " "))
@@ -189,7 +199,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPath)
+	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPathWithCensoredSuffix)
 	fmt.Printf("✅ Censored video was output to: %s\n", fullFilePath)
 
 	if openFile {
