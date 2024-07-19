@@ -9,6 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/techygrrrl/sf6vid/file_utils"
+	"github.com/techygrrrl/sf6vid/string_utils"
 	"github.com/techygrrrl/sf6vid/video_utils"
 )
 
@@ -96,7 +97,10 @@ func runTrimCmd(cmd *cobra.Command, args []string) {
 	}
 
 	commandArgs = append(commandArgs, durationArgs...)
-	commandArgs = append(commandArgs, outputPath)
+
+	durationSuffix := fmt.Sprintf("trimmed_%s-%s", startTime.String(), endTime.String())
+	outputPathWithTrimmedSuffix := string_utils.AppendStringToFileName(outputPath, durationSuffix)
+	commandArgs = append(commandArgs, outputPathWithTrimmedSuffix)
 
 	if flagUseDebug {
 		fmt.Printf("⚙️  Executing command:\n\nffmpeg %s\n\n", strings.Join(commandArgs, " "))
@@ -107,7 +111,7 @@ func runTrimCmd(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPath)
+	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPathWithTrimmedSuffix)
 	fmt.Printf("✅ Trimmed video was output to: %s\n", fullFilePath)
 
 	if openFile {
