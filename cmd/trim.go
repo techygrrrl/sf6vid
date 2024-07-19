@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -87,21 +88,27 @@ func runTrimCmd(cmd *cobra.Command, args []string) {
 	durationArgs := video_utils.FormattedDurationArgsForFFmpeg(startTime, endTime)
 	commandArgs := []string{
 		"-i", inputPath,
+
+		// Quality settings. See shrink
+		"-c:v", "libx265", "-crf", "30",
+
 		"-y",
 	}
 
 	commandArgs = append(commandArgs, durationArgs...)
 	commandArgs = append(commandArgs, outputPath)
 
+	if flagUseDebug {
+		fmt.Printf("⚙️  Executing command:\n\nffmpeg %s\n\n", strings.Join(commandArgs, " "))
+	}
 	_, err = exec.Command("ffmpeg", commandArgs...).Output()
-
 	if err != nil {
 		fmt.Println("💥 could not trim the video")
 		os.Exit(1)
 	}
 
 	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPath)
-	fmt.Printf("✅ Trimmed video should be available at %s\n", fullFilePath)
+	fmt.Printf("✅ Trimmed video was output to: %s\n", fullFilePath)
 
 	if openFile {
 		err = file_utils.OpenFile(fullFilePath)

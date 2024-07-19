@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -39,7 +40,7 @@ func init() {
 
 	// trim config
 	censorCmd.Flags().Duration("start", time.Duration(0), "Optional start time for trimming the video")
-	censorCmd.Flags().Duration("end", time.Duration(0), "Optional start time for trimming the video")
+	censorCmd.Flags().Duration("end", time.Duration(0), "Optional end time for trimming the video")
 
 	err := censorCmd.MarkFlagRequired("input")
 	if err != nil {
@@ -152,6 +153,9 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	chainAssembler := video_utils.CreateChainAssembler(chainLinks)
 
 	filterComplexChain, err := chainAssembler.AssembleChain(*inputVideoResolution, playerSide)
+	if err != nil {
+		panic(err)
+	}
 
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -162,6 +166,10 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 		"-i", inputPath,
 		"-filter_complex", filterComplexChain,
 		"-map", "[base]",
+
+		// Quality settings. See shrink
+		"-c:v", "libx265", "-crf", "30",
+
 		"-y",
 	}
 
@@ -172,15 +180,17 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	// append the output path
 	commandArgs = append(commandArgs, outputPath)
 
+	if flagUseDebug {
+		fmt.Printf("⚙️  Executing command:\n\nffmpeg %s\n\n", strings.Join(commandArgs, " "))
+	}
 	_, err = exec.Command("ffmpeg", commandArgs...).Output()
-
 	if err != nil {
 		fmt.Printf("💥 could not process the video. try lowering the blur value from %d\n", blurValue)
 		os.Exit(1)
 	}
 
 	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPath)
-	fmt.Printf("✅ Censored video should be available at %s\n", fullFilePath)
+	fmt.Printf("✅ Censored video was output to: %s\n", fullFilePath)
 
 	if openFile {
 		err = file_utils.OpenFile(fullFilePath)
