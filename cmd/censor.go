@@ -33,7 +33,6 @@ func init() {
 	// files
 	censorCmd.Flags().StringP("input", "i", "", "Path to input file")
 	censorCmd.Flags().StringP("output", "o", "", "Path to output file")
-	censorCmd.Flags().Bool("open", false, "Open the file after running this command")
 
 	// blur config
 	censorCmd.Flags().Int("blur", 6, "Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored)")
@@ -56,11 +55,6 @@ func init() {
 }
 
 func runCensorCmd(cmd *cobra.Command, args []string) {
-	openFile, err := cmd.Flags().GetBool("open")
-	if err != nil {
-		panic(err)
-	}
-
 	doP1, err := cmd.Flags().GetBool("p1")
 	if err != nil {
 		panic(err)
@@ -202,7 +196,7 @@ func runCensorCmd(cmd *cobra.Command, args []string) {
 	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPathWithCensoredSuffix)
 	fmt.Printf("✅ Censored video was output to: %s\n", fullFilePath)
 
-	if openFile {
+	if flagOpen {
 		err = file_utils.OpenFile(fullFilePath)
 	}
 }
