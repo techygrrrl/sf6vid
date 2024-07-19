@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -15,6 +16,11 @@ var shrinkCmd = &cobra.Command{
 	Short: "Shrinks the video frame size by the indicated percentage, and compresses the quality in other ways",
 	Long:  `Allows you to specify a percentage by which the video frame will be shrunk.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		cwd, err := os.Getwd()
+		if err != nil {
+			panic(err)
+		}
+
 		inputPath, err := cmd.Flags().GetString("input")
 		if err != nil {
 			panic(err)
@@ -66,7 +72,8 @@ var shrinkCmd = &cobra.Command{
 			panic(err)
 		}
 
-		fmt.Printf("✅ Shrunk video was output to: %s\n", outputPathWithScaledSuffix)
+		fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPathWithScaledSuffix)
+		fmt.Printf("✅ Shrunk video was output to: %s\n", fullFilePath)
 	},
 }
 
