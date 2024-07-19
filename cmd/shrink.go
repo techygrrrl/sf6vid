@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/techygrrrl/sf6vid/file_utils"
 	"github.com/techygrrrl/sf6vid/string_utils"
 	"github.com/techygrrrl/sf6vid/video_utils"
 )
@@ -90,6 +91,10 @@ Uses H.265 encoding to further compress the video.
 
 		fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPathWithScaledSuffix)
 		fmt.Printf("✅ Shrunk video was output to: %s\n", fullFilePath)
+
+		if flagOpen {
+			err = file_utils.OpenFile(fullFilePath)
+		}
 	},
 }
 
