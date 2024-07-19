@@ -133,3 +133,19 @@ func TestCensorBox_OverlayOutput(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "overlay=685:4", smallResult)
 }
+
+func TestGetScaledResolution(t *testing.T) {
+	subject := VideoResolution{
+		width:  1280,
+		height: 720,
+	}
+
+	output := subject.GetScaledResolution(50)
+	// Correct values
+	assert.Equal(t, 640, output.width)
+	assert.Equal(t, 360, output.height)
+	// Original struct unchanged
+	assert.Equal(t, 1280, subject.width)
+	assert.Equal(t, 720, subject.height)
+	fmt.Printf("Scaled: %v , Original: %v ", output, subject)
+}
