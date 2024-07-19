@@ -13,8 +13,10 @@ import (
 
 var shrinkCmd = &cobra.Command{
 	Use:   "shrink",
-	Short: "Shrinks the video frame size by the indicated percentage, and compresses the quality in other ways",
-	Long:  `Allows you to specify a percentage by which the video frame will be shrunk.`,
+	Short: "Reduces the size of the video including frame by the indicated percentage, and compresses the quality in other ways",
+	Long: `Reduces the size of the video. Allows you to specify a percentage by which the video frame will be shrunk.
+Uses H.265 encoding to further compress the video.
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cwd, err := os.Getwd()
 		if err != nil {
@@ -25,10 +27,18 @@ var shrinkCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
+		if inputPath == "" {
+			fmt.Println("`input` is required")
+			os.Exit(1)
+		}
 
 		outputPath, err := cmd.Flags().GetString("output")
 		if err != nil {
 			panic(err)
+		}
+		if outputPath == "" {
+			fmt.Println("`output` is required")
+			os.Exit(1)
 		}
 
 		targetPercent, err := cmd.Flags().GetInt("size")
@@ -36,7 +46,8 @@ var shrinkCmd = &cobra.Command{
 			panic(err)
 		}
 		if targetPercent <= 0 || targetPercent >= 101 {
-			panic(fmt.Errorf("invalid target percent: %d - `size` must be between 1 and 101", targetPercent))
+			fmt.Printf("invalid target percent: %d - `size` must be between 1 and 101", targetPercent)
+			os.Exit(1)
 		}
 
 		inputVideoResolution, err := video_utils.GetVideoResolution(inputPath)
@@ -69,7 +80,12 @@ var shrinkCmd = &cobra.Command{
 		}
 		_, err = exec.Command("ffmpeg", commandArgs...).Output()
 		if err != nil {
-			panic(err)
+			fmt.Println("💥 could not shrink video")
+
+			if flagUseDebug {
+				panic(err)
+			}
+			os.Exit(1)
 		}
 
 		fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPathWithScaledSuffix)

@@ -7,7 +7,7 @@ Usage:
 Available Commands:
   censor      Censor the player information in a video
   help        Help about any command
-  shrink      Shrinks the video frame size by the indicated percentage, and compresses the quality in other ways
+  shrink      Reduces the size of the video including frame by the indicated percentage, and compresses the quality in other ways
   trim        Trim the video for the provided start and/or end times
 
 Flags:
