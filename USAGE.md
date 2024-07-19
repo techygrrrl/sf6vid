@@ -62,3 +62,20 @@ Flags:
 Global Flags:
       --debug   More verbose logging
 ```
+### shrink
+```
+Reduces the size of the video. Allows you to specify a percentage by which the video frame will be shrunk.
+Uses H.265 encoding to further compress the video.
+
+Usage:
+  sf6vid shrink [flags]
+
+Flags:
+  -i, --input string    Path to input file
+  -o, --output string   Path to output file
+  -s, --size int        Desired output size of the video percentage, e.g. a video that is 1280x720 will be 640x360 if you specify --size 50 (default 100)
+  -h, --help            help for shrink
+
+Global Flags:
+      --debug   More verbose logging
+```

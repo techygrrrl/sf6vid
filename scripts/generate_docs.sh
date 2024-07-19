@@ -19,3 +19,8 @@ echo "### trim" >> USAGE.md
 echo '```' >> USAGE.md
 sf6vid trim --help >> USAGE.md
 echo '```' >> USAGE.md
+
+echo "### shrink" >> USAGE.md
+echo '```' >> USAGE.md
+sf6vid shrink --help >> USAGE.md
+echo '```' >> USAGE.md
