@@ -145,6 +145,21 @@ func (v VideoResolution) Height() int {
 	return v.height
 }
 
+func (v VideoResolution) String() string {
+	return fmt.Sprintf("%dx%d", v.width, v.height)
+}
+
+func (v VideoResolution) GetScaledResolution(scalePercent int) VideoResolution {
+	sizeDiff := float32(scalePercent) * 0.01
+	targetWidth := float32(v.Width()) * sizeDiff
+	targetHeight := float32(v.Height()) * sizeDiff
+
+	return VideoResolution{
+		width:  int(targetWidth),
+		height: int(targetHeight),
+	}
+}
+
 // endregion Video
 
 // region Blur settings

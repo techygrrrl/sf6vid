@@ -7,9 +7,11 @@ Usage:
 Available Commands:
   censor      Censor the player information in a video
   help        Help about any command
+  shrink      Shrinks the video frame size by the indicated percentage, and compresses the quality in other ways
   trim        Trim the video for the provided start and/or end times
 
 Flags:
+      --debug     More verbose logging
   -h, --help      help for sf6vid
   -v, --version   version for sf6vid
 
@@ -32,8 +34,11 @@ Flags:
       --blur int         Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored) (default 6)
       --box-blur         Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)
       --start duration   Optional start time for trimming the video
-      --end duration     Optional start time for trimming the video
+      --end duration     Optional end time for trimming the video
   -h, --help             help for censor
+
+Global Flags:
+      --debug   More verbose logging
 ```
 ### trim
 ```
@@ -53,4 +58,7 @@ Flags:
       --start duration   Start time for trimming the video
       --end duration     End time for trimming the video
   -h, --help             help for trim
+
+Global Flags:
+      --debug   More verbose logging
 ```
