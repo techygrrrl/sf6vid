@@ -7,6 +7,7 @@ import (
 )
 
 var flagUseDebug bool = false
+var flagOpen bool = false
 
 var rootCmd = &cobra.Command{
 	Use:     "sf6vid",
@@ -23,4 +24,5 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().BoolVar(&flagUseDebug, "debug", false, "More verbose logging")
+	rootCmd.PersistentFlags().BoolVar(&flagOpen, "open", false, "Open the file after running this command")
 }

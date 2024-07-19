@@ -13,6 +13,7 @@ Available Commands:
 Flags:
       --debug     More verbose logging
   -h, --help      help for sf6vid
+      --open      Open the file after running this command
   -v, --version   version for sf6vid
 
 Use "sf6vid [command] --help" for more information about a command.
@@ -30,7 +31,6 @@ Flags:
       --p2               Censor player 2 side
   -i, --input string     Path to input file
   -o, --output string    Path to output file
-      --open             Open the file after running this command
       --blur int         Custom blur value for when the box blur is used (requires --box-blur flag otherwise this value will be ignored) (default 6)
       --box-blur         Use the box blur filter instead of the new pixelize filter (pixelize requires ffmpeg 6+)
       --start duration   Optional start time for trimming the video
@@ -39,6 +39,7 @@ Flags:
 
 Global Flags:
       --debug   More verbose logging
+      --open    Open the file after running this command
 ```
 ### trim
 ```
@@ -54,13 +55,13 @@ Usage:
 Flags:
   -i, --input string     Path to input file
   -o, --output string    Path to output file
-      --open             Open the file after running this command
       --start duration   Start time for trimming the video
       --end duration     End time for trimming the video
   -h, --help             help for trim
 
 Global Flags:
       --debug   More verbose logging
+      --open    Open the file after running this command
 ```
 ### shrink
 ```
@@ -78,4 +79,5 @@ Flags:
 
 Global Flags:
       --debug   More verbose logging
+      --open    Open the file after running this command
 ```

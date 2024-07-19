@@ -31,7 +31,6 @@ func init() {
 	// files
 	trimCmd.Flags().StringP("input", "i", "", "Path to input file")
 	trimCmd.Flags().StringP("output", "o", "", "Path to output file")
-	trimCmd.Flags().Bool("open", false, "Open the file after running this command")
 
 	// trim config
 	trimCmd.Flags().Duration("start", time.Duration(0), "Start time for trimming the video")
@@ -56,11 +55,6 @@ func runTrimCmd(cmd *cobra.Command, args []string) {
 	}
 
 	outputPath, err := cmd.Flags().GetString("output")
-	if err != nil {
-		panic(err)
-	}
-
-	openFile, err := cmd.Flags().GetBool("open")
 	if err != nil {
 		panic(err)
 	}
@@ -114,7 +108,7 @@ func runTrimCmd(cmd *cobra.Command, args []string) {
 	fullFilePath := fmt.Sprintf("%s/%s", cwd, outputPathWithTrimmedSuffix)
 	fmt.Printf("✅ Trimmed video was output to: %s\n", fullFilePath)
 
-	if openFile {
+	if flagOpen {
 		err = file_utils.OpenFile(fullFilePath)
 	}
 }
