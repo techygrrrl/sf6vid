@@ -13,7 +13,7 @@ import (
 
 var shrinkCmd = &cobra.Command{
 	Use:   "shrink",
-	Short: "Reduces the size of the video including frame by the indicated percentage, and compresses the quality in other ways",
+	Short: "Reduces the size of the video, including frame size and other compression",
 	Long: `Reduces the size of the video. Allows you to specify a percentage by which the video frame will be shrunk.
 Uses H.265 encoding to further compress the video.
 	`,
