@@ -11,7 +11,7 @@ var flagOpen bool = false
 
 var rootCmd = &cobra.Command{
 	Use:     "sf6vid",
-	Version: "0.4.2",
+	Version: "0.4.3",
 }
 
 func Execute() {
