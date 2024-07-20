@@ -1,7 +1,10 @@
 package file_utils
 
-import "fmt"
+import (
+	"os/exec"
+)
 
 func OpenFile(filepath string) error {
-	return fmt.Errorf("command unsupported: https://github.com/techygrrrl/sf6vid/issues/4")
+	_, err := exec.Command("xdg-open", filepath).Output()
+	return err
 }
